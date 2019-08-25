@@ -1,0 +1,11 @@
+.idea
+target
+project/project
+project/target
+
+src/main/resources/logs
+confluent*
+
+.envrc
+stack-kafka/files/full-stack
+app-*.log
