@@ -1,0 +1,45 @@
+<configuration scan="true" scanPeriod="60 seconds">
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- filter events based on exact level matching -->
+<!--
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+-->
+        <encoder>
+            <pattern>%date{yyyy-MM-dd HH:mm:ss} - %highlight([%level]) - %logger: %message%n%xException{0}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="ROLLING_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- deny all events with a level below INFO, that is TRACE and DEBUG -->
+        <!--<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>-->
+        <file>src/main/resources/logs/app.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>app-%d.log</fileNamePattern>
+            <maxHistory>5</maxHistory>
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%date{yyyy-MM-dd HH:mm:ss.SSS} - [%level] - %logger: %message%n%xException</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="ASYNCFILE" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="ROLLING_FILE"/>
+    </appender>
+
+    <logger name="org" level="WARN"/>
+    <logger name="io.confluent" level="WARN"/>
+
+    <root level="TRACE">
+        <appender-ref ref="ASYNCFILE"/>
+        <appender-ref ref="STDOUT"/>
+    </root>
+
+</configuration>
